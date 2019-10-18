@@ -6,4 +6,32 @@
     <select id="getUserById" parameterType="int" resultType="com.zydgbbs.mybatis.domain.User">
         select * from user where id = #{id}
     </select>
+    <!--resultType：如果返回结果为集合，只需要设置为每一个的数据类型-->
+    <select id="getUserByName" parameterType="String" resultType="com.zydgbbs.mybatis.domain.User">
+        select * from user where username like '%${name}%'
+    </select>
+    <insert id="insertUser" parameterType="com.zydgbbs.mybatis.domain.User" useGeneratedKeys="true" keyProperty="id">
+        <!--
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        -->
+        insert into user (username,birthday,sex,address) VALUES (#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <insert id="insertUserUUID" parameterType="com.zydgbbs.mybatis.domain.User" >
+        <!--下面有selectKey，则上面的useGeneratedKeys="true" keyProperty="id"不生效-->
+        <selectKey keyProperty="uuid2" resultType="String" order="BEFORE">
+            select UUID()
+        </selectKey>
+        insert into user (username,birthday,sex,address,uuid2) VALUES (#{username},#{birthday},#{sex},#{address},#{uuid2})
+    </insert>
+
+    <update id="updateUser" parameterType="com.zydgbbs.mybatis.domain.User">
+        update user set username=#{username} where id=#{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="int">
+        DELETE from user where id=#{id}
+    </delete>
 </mapper>
